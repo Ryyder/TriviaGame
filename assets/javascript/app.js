@@ -4,7 +4,7 @@ $(document).ready(function () {
   var incorrect = 0; //hold incorrect answer value
   var counter = 0; //holds question position
   var innerLength = 0;
-  var questionSec = 10;
+  var questionSec = 30;
   var transitionSec = 5;
   var questionID;
   var transitionID;
@@ -45,7 +45,7 @@ $(document).ready(function () {
         "Yajirobe"
       ],
       answer: 3,
-      img: "./assets/images/yajirobe"
+      img: "./assets/images/yajirobe.jpg"
     },
     {
       question: "How many Dragon Balls are needed to make a wish?",
@@ -126,29 +126,29 @@ $(document).ready(function () {
     }
   ];
 
-  console.log("Question 2 answer: " + triviaQuestions[1].answer);
-  console.log("You guessed: " + triviaQuestions[1].choice[0]);
-  console.log("correct answer: " + triviaQuestions[1].answer);
-  console.log("image src: " + triviaQuestions[0].img);
-
-
   innerLength = triviaQuestions[0].choice.length;
   outerLength = triviaQuestions.length;
 
-  //console.log(triviaQuestions[counter].question);
+  var audio = new Audio('./assets/audio/uigoku.mp3');
+  var hitSound = new Audio('./assets/audio/dbz hit.mp3');
+  var powerSound = new Audio('./assets/audio/powerup.mp3');
+
+  //plays Dragon Ball Z music
+  function playTheme() {
+    audio.play();
+  }
+
+  //plays sound effect
+  function hit() {
+    hitSound.play();
+  }
+
+  function power() {
+    powerSound.play();
+  }
 
   //generate question function
   function showQuestion(num) {
-
-    /* for (var i = 0; i < triviaQuestions.length; i++) {
-      
-      $("#question").append("<h2>" + triviaQuestions[i].question + "</h2>")
-
-      for (var j = 0; j < triviaQuestions[i].choice.length; j++) {
-
-        $("#question").append(`<input type = "radio" name = ${i} value = ${j}>${triviaQuestions[i].choice[j]}</input>`)
-      }
-    } */
 
     //output question and possible choices
     $("#question").html("<h2>" + triviaQuestions[num].question + "</h2>");
@@ -169,6 +169,7 @@ $(document).ready(function () {
 
   }
 
+  //click event handler for whichever button the user clicks....
   $(document).on("click", ".user-choice", function () {
 
     //extract the value from the button user clicks
@@ -179,95 +180,100 @@ $(document).ready(function () {
 
     console.log(userChoice);
 
+    //if the user choice is correct
     if (userChoice === triviaQuestions[counter].answer) {
-      correct++;
-      isCorrect = true;
-      questionStop();
-      timeMsg(counter);
-      $("#choice").empty();
-      transitionStart();
+      endGame(counter);
+      power(); //play sound effect
+      correct++; //increment our correct variable
+      isCorrect = true; //change our boolean to true
+      questionStop(); //stop our question timer
+      timeMsg(counter); //output the correct msg to user
+      $("#choice").empty(); //clear out our div
+      transitionStart(); //start our transition timer
     }
+    //if the user choice is incorrect
     else if (userChoice != triviaQuestions[counter].answer) {
-      incorrect++;
-      isIncorrect = true;
-      questionStop();
-      timeMsg(counter);
-      $("#choice").empty();
-      transitionStart();
+      endGame(counter);
+      hit(); //play sound effect
+      incorrect++; //increment our incorrect variable
+      isIncorrect = true; //change our boolean to true
+      questionStop(); //stop our question timer
+      timeMsg(counter); //output the incorrect msg to user
+      $("#choice").empty(); //clear out our div
+      transitionStart(); //start our transition timer
     }
-    console.log("correct answer: " + correct);
-    console.log("incorrect answer: " + incorrect);
-    console.log("counter: " + counter);
-    console.log("isCorrect: " + isCorrect);
-    console.log("inIncorrect: " + isIncorrect);
-
   });
 
+  //starts trivia game
+  $("#start").on("click", function (event) {
 
-
-  $("#submit-quiz").on("click", function (event) {
-
+    counter = 0;
+    questionSec = 30;
+    transitionSec = 5;
+    audio.pause();
+    audio.currentTime = 0;
+    questionStop();
+    transitionStop();
     event.preventDefault();
-
-    /* var q1 = $('input[name=0]:checked').val();
- 
-     var q2 = $('input[name=1]:checked').val();
- 
-     var q3 = $('input[name=2]:checked').val();
- 
-     var q4 = $('input[name=3]:checked').val();
- 
-     var q5 = $('input[name=4]:checked').val();
- 
-     var q6 = $('input[name=5]:checked').val();
- 
-     var q7 = $('input[name=6]:checked').val();
- 
-     var q8 = $('input[name=7]:checked').val();
- 
-     var q9 = $('input[name=8]:checked').val();
- 
-     var q10 = $('input[name=9]:checked').val();
- 
-     var userSubmit = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10];
-     console.log(userSubmit); 
- 
-      for (var i = 0; i < userSubmit.length; i++) {
-       if (userSubmit[i] == correctAnswers[i]) {
-         correct++;
-       }
-     } 
- 
-     $("#msg").append(`<h2>${correct}</h2>`); */
-
-
+    $("#question").empty();
+    $("#show-time").empty();
+    $("#msg").empty();
+    $("#choice").empty();
+    $("#correct-answer").empty();
+    $("#result").empty();
+    $("#correct-image").empty();
+    playTheme(); //start our theme music
+    showQuestion(counter); //shows our question
+    questionStart(); //starts our question timer
+  
   });
 
-  showQuestion(counter);
+  //pauses and restart music on user click
+  $("#pause").on("click", function () {
+    if (audio.paused) {
+      audio.play();
+    }
+    else {
+      audio.pause();
+    }
+  });
 
-  //clear choice function
+  //we reinitialize our variables to our timer can restart correctly
   function reInit() {
     counter++;
-    questionSec = 10;
+    questionSec = 30;
     transitionSec = 5;
     isCorrect = false;
     isIncorrect = false;
     isTimeUp = false;
-    //$("#choice").empty();
     $("#msg").empty();
-    //$("#correct-image").empty();
+  }
+
+  function endGame(num) {
+
+    if (num == 9) {
+      questionStop();
+      transitionStop();
+      $("#result").append("Correct: " + correct + "<br>");
+      $("#result").append("Incorrect: " + incorrect);
+
+    }
+
   }
 
   //function to handle image output and message output to user...
   function timeMsg(num) {
 
+    //our image variable
     var choiceImage = $("<img>");
+    //our correct answer, we'll use this as an index
+    var choiceIndex = triviaQuestions[num].answer;
 
     //handles if the user chooses correct answer
     if (isCorrect == true) {
 
       $("#msg").append("Correct Answer!");
-      //$("#correct-answer").append(triviaQuestions[num].answer);
+      $("#correct-answer").append(triviaQuestions[num].choice[choiceIndex]);
       choiceImage.attr("src", triviaQuestions[num].img);
       $("#correct-image").empty().append(choiceImage);
     }
@@ -275,7 +281,7 @@ $(document).ready(function () {
     else if (isIncorrect == true) {
 
       $("#msg").append("Incorrect Answer!");
-      //$("#correct-answer").append(triviaQuestions[num].answer);
+      $("#correct-answer").append(triviaQuestions[num].choice[choiceIndex]);
       choiceImage.attr("src", triviaQuestions[num].img);
       $("#correct-image").empty().append(choiceImage);
     }
@@ -283,7 +289,7 @@ $(document).ready(function () {
     else if (isTimeUp == true) {
 
       $("#msg").append("Out of Time!");
-      //$("#correct-answer").append(triviaQuestions[num].answer);
+      $("#correct-answer").append(triviaQuestions[num].choice[choiceIndex]);
       choiceImage.attr("src", triviaQuestions[num].img);
       $("#correct-image").empty().append(choiceImage);
 
@@ -303,6 +309,7 @@ $(document).ready(function () {
     $("#show-time").html("<h2> Time Remaining: " + questionSec + "</h2>");
 
     if (questionSec === 0) {
+      endGame(counter);
       incorrect++;
       isTimeUp = true;
       questionStop();
@@ -327,6 +334,7 @@ $(document).ready(function () {
     if (transitionSec === 0) {
       transitionStop();
       $("#correct-image").empty();
+      $("#correct-answer").empty();
       reInit();
       showQuestion(counter);
       questionStart();
@@ -338,14 +346,18 @@ $(document).ready(function () {
   //stops question timer
   function questionStop() {
     clearInterval(questionID);
+    $("#correct-image").empty();
+    $("#correct-answer").empty();
   }
 
   //stops transition timer
   function transitionStop() {
     clearInterval(transitionID);
+    $("#correct-image").empty();
+    $("#correct-answer").empty();
   }
 
-  questionStart();
+  //questionStart();
 
 
 
