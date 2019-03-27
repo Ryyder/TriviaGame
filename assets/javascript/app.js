@@ -346,10 +346,13 @@ $(document).ready(function () {
       $("#correct-image").empty(); //empty our image div
       $("#correct-answer").empty(); //empty our correct-answer div
       reInit(); //reinitialize our timers for question and transition
-      showQuestion(counter); //show our next question
-      if (counter < 9) {
+      if (counter <= 9) {
+        showQuestion(counter); //show our next question
         questionStart(); //start our question timer
       }
+      
+      
+      
       
     }
 
