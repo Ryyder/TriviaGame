@@ -4,13 +4,13 @@ $(document).ready(function () {
   var incorrect = 0; //hold incorrect answer value
   var counter = 0; //holds question position
   var innerLength = 0;
-  var questionSec = 30;
-  var transitionSec = 5;
-  var questionID;
-  var transitionID;
-  var isCorrect = false;
-  var isIncorrect = false;
-  var isTimeUp = false;
+  var questionSec = 30; //question duration (30 seconds)
+  var transitionSec = 5; //transition duration (5 seconds)
+  var questionID; //holds value of our question timer variable
+  var transitionID; //holds value of our transition timer variable
+  var isCorrect = false; //boolean to check if the user selected correct answer
+  var isIncorrect = false; //boolean to check if the user selected the incorrect answer
+  var isTimeUp = false; //boolean to check if the time ran out for the question
 
   //structure to hold trivia questions, choices, and answers
   var triviaQuestions = [
@@ -126,9 +126,10 @@ $(document).ready(function () {
     }
   ];
 
+  //length of our choices
   innerLength = triviaQuestions[0].choice.length;
-  outerLength = triviaQuestions.length;
 
+  //variables to play our audio
   var audio = new Audio('./assets/audio/uigoku.mp3');
   var hitSound = new Audio('./assets/audio/dbz hit.mp3');
   var powerSound = new Audio('./assets/audio/powerup.mp3');
@@ -138,11 +139,12 @@ $(document).ready(function () {
     audio.play();
   }
 
-  //plays sound effect
+  //plays sound effect on incorrect answer
   function hit() {
     hitSound.play();
   }
 
+  //plays sound effect on correct answer
   function power() {
     powerSound.play();
   }
@@ -158,7 +160,7 @@ $(document).ready(function () {
       //output choices to the user
       var button = $("<button>" + triviaQuestions[num].choice[j] + "</button>" + "<br>");
 
-      button.addClass("user-choice");
+      button.addClass("user-choice btn btn-primary");
 
       //append button values to our choice div
       $("#choice").append(button);
@@ -207,6 +209,7 @@ $(document).ready(function () {
   //starts trivia game
   $("#start").on("click", function (event) {
 
+    //we have to reinitialize our variable here, empty divs and stop/start our timers
     counter = 0;
     questionSec = 30;
     transitionSec = 5;
@@ -214,7 +217,6 @@ $(document).ready(function () {
     audio.currentTime = 0;
     questionStop();
     transitionStop();
-    event.preventDefault();
     $("#question").empty();
     $("#show-time").empty();
     $("#msg").empty();
@@ -238,7 +240,7 @@ $(document).ready(function () {
     }
   });
 
-  //we reinitialize our variables to our timer can restart correctly
+  //we reinitialize our variables so our timer can restart correctly
   function reInit() {
     counter++;
     questionSec = 30;
@@ -249,11 +251,13 @@ $(document).ready(function () {
     $("#msg").empty();
   }
 
+  //stops the game and outputs the results of the trivia game to the user
   function endGame(num) {
 
     if (num == 9) {
       questionStop();
       transitionStop();
+      $("#result").empty();
       $("#result").append("Correct: " + correct + "<br>");
       $("#result").append("Incorrect: " + incorrect);
 
@@ -304,21 +308,25 @@ $(document).ready(function () {
   //function question timer
   function questionTimer() {
 
+    //countdown the question timer
     questionSec--;
 
+    //append to our show-time div
     $("#show-time").html("<h2> Time Remaining: " + questionSec + "</h2>");
 
+    //if the timer hits 0, we ....
     if (questionSec === 0) {
-      endGame(counter);
-      incorrect++;
-      isTimeUp = true;
-      questionStop();
-      timeMsg(counter);
-      $("#choice").empty();
-      transitionStart();
+      //endGame(counter); //check end of game
+      incorrect++; //increment incorrect guess variable
+      isTimeUp = true; //turn our boolean to true
+      questionStop(); //stop the question timer
+      timeMsg(counter); //display our message
+      $("#choice").empty(); //empty our div
+      transitionStart(); //start our transition timer
     }
   }
 
+  //starts my transition timer
   function transitionStart() {
     transitionID = setInterval(transitionTimer, 1000);
 
@@ -327,18 +335,22 @@ $(document).ready(function () {
   //function transition timer
   function transitionTimer() {
 
+    //countdown the transition timer
     transitionSec--;
 
-    console.log("transition time: " + transitionSec);
-
+    //if the transition timer hits 0, we ...
     if (transitionSec === 0) {
-      transitionStop();
-      $("#correct-image").empty();
-      $("#correct-answer").empty();
-      reInit();
-      showQuestion(counter);
-      questionStart();
-
+      console.log("counter: " + counter);
+      endGame(counter); //check end of game
+      transitionStop(); //stop our transition timer
+      $("#correct-image").empty(); //empty our image div
+      $("#correct-answer").empty(); //empty our correct-answer div
+      reInit(); //reinitialize our timers for question and transition
+      showQuestion(counter); //show our next question
+      if (counter < 9) {
+        questionStart(); //start our question timer
+      }
+      
     }
 
   }
@@ -356,13 +368,5 @@ $(document).ready(function () {
     $("#correct-image").empty();
     $("#correct-answer").empty();
   }
-
-  //questionStart();
-
-
-
-
-  //}
-
 
 });

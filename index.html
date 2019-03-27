@@ -15,26 +15,41 @@
 
 <body>
 
-  <h1>Dragon Ball Z Trivia Game</h1>
+  <!-- bootstrap jumbotron -->
+  <div class="jumbotron text-center">
+    <h1 class="display-4 text-center">Dragon Ball Z Trivia Game</h1>
 
-  <div id="question"></div>
+    <br>
+    <br>
+    <br>
+    <!-- holds my questions -->
+    <div id="question"></div>
 
-  <div id="show-time"></div>
+    <!-- displays time -->
+    <div id="show-time"></div>
 
-  <div id="msg"></div>
+    <!-- shows correct/incorrect/out of time message -->
+    <div class="textID" id="msg"></div>
 
-  <div id="choice"></div>
+    <!-- displays choices for user -->
+    <div id="choice"></div>
 
-  <div id="correct-answer"></div>
+    <!-- displays the correct answer after the user chooses -->
+    <div class="textID" id="correct-answer"></div>
 
-  <div id ="result"></div>
+    <!-- shows the results of the trivia -->
+    <div id ="result"></div>
 
-  <div id="correct-image"></div>
+    <!-- displays the correct image after the user guesses -->
+    <div id="correct-image"></div>
 
-  <button id="start">Start</button>
+    <!-- button to start the trivia game -->
+    <button class="btn btn-primary" id="start">Start</button>
 
-  <button id="pause">Pause/Restart Music</button>
-
+    <!-- button to pause or restart music -->
+    <button class="btn btn-primary" id="pause">Pause/Restart Music</button> 
+  </div>
+  
 
   <!-- link to jquery and js file -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

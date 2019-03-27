@@ -1,0 +1,40 @@
+/* dragonball z font */
+@font-face {
+  font-family: "Saiyan-Sans";
+  src: url("../images/Saiyan-Sans.ttf") format("truetype"); 
+
+}
+
+/* apply this font to our body */
+body {
+  font-family: "Saiyan-Sans";
+  background-image: url("../images/background.jpg");
+  background-size: 100% 250%;
+  color: #EBD406;
+
+}
+
+/* remove jumbotron background */
+.jumbotron {
+  background: none !important;
+}
+
+/* remove the button background */
+.btn {
+  background: none !important;
+  border: none;
+  color: #EBD406;
+  padding: .5rem 7.5rem;
+  font-size: 2rem;
+}
+
+/* our text size */
+.textID {
+  font-size: 2rem;
+}
+
+/* set our image size */
+img {
+  width: 500px;
+  height: 500px;
+}
