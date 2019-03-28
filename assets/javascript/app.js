@@ -184,7 +184,7 @@ $(document).ready(function () {
 
     //if the user choice is correct
     if (userChoice === triviaQuestions[counter].answer) {
-      endGame(counter);
+      //endGame(counter);
       power(); //play sound effect
       correct++; //increment our correct variable
       isCorrect = true; //change our boolean to true
@@ -195,7 +195,7 @@ $(document).ready(function () {
     }
     //if the user choice is incorrect
     else if (userChoice != triviaQuestions[counter].answer) {
-      endGame(counter);
+      //endGame(counter);
       hit(); //play sound effect
       incorrect++; //increment our incorrect variable
       isIncorrect = true; //change our boolean to true
@@ -316,7 +316,7 @@ $(document).ready(function () {
 
     //if the timer hits 0, we ....
     if (questionSec === 0) {
-      //endGame(counter); //check end of game
+      endGame(counter); //check end of game
       incorrect++; //increment incorrect guess variable
       isTimeUp = true; //turn our boolean to true
       questionStop(); //stop the question timer
@@ -340,7 +340,6 @@ $(document).ready(function () {
 
     //if the transition timer hits 0, we ...
     if (transitionSec === 0) {
-      console.log("counter: " + counter);
       endGame(counter); //check end of game
       transitionStop(); //stop our transition timer
       $("#correct-image").empty(); //empty our image div
